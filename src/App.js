@@ -88,7 +88,7 @@ class MinutesCounter extends Component {
 
 class Filter extends Component {
   render (){
-  return(
+    return(
     <div>
       <img/>
       <input type="text" style={{margin:"10px"}} 
@@ -99,16 +99,18 @@ class Filter extends Component {
 }}
 
 //Playlist
-class Playlists extends Component {
+class Playlist extends Component {
   render (){
+    let playlist = this.props.playlist
   return(
     <div style={{...defaultStyle, width: "20%", display: "inline-block"}}>
       <img/>
-      <h3>playlist name</h3>
+      <h3>{playlist.name}</h3>
       <ul>
-        <li>song1</li>
-        <li>song2</li>
-        <li>song3</li>
+        {playlist.songs.map(song =>
+          <li>{song.name}</li>
+          )}
+        
         </ul>
     </div>
   )
@@ -141,13 +143,13 @@ class App extends Component {
 
         <Filter/>
 
-        <Playlists/>
+        {
+          this.state.serverData.user.playlists.map(playlist => 
+            <Playlist playlist= {playlist}/>
+          
+            )}
 
-        <Playlists/>
-
-        <Playlists/>
-
-        <Playlists/>
+        
 
       </div> : <h1>Loading</h1>}
     </div>
