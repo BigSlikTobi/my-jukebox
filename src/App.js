@@ -9,7 +9,7 @@ let defaultStyle = {
 //set fake server data to simulize a data source
 let fakeServerData = {
   user: {
-    name: "Jasmin",
+    name: "JasBox",
     playlists: [
       {
         name: "Sternenschweif",
@@ -70,14 +70,22 @@ class PlaylistCounter extends Component {
 //Counter of minutes of all playlists
 class MinutesCounter extends Component {
   render () {
-    let totalDuration = 100 
+    let allSongs = this.props.playlists.reduce((songs, eachPlaylist) =>  {
+      return songs.concat(eachPlaylist.songs)
+  }, [])
+
+    let totalDuration = allSongs.reduce((sum, eachSong) => {
+      return sum + eachSong.duration
+    },0)
+  
     return (
-      <div style={{...defaultStyle, display: "inline-block", padding: "10px"}}>
+     <div style={{...defaultStyle, display: "inline-block", padding: "10px"}}>
             <h2>{Math.round(totalDuration/60)} minutes</h2>
       </div>
     );
   }
 }
+
 class Filter extends Component {
   render (){
   return(
@@ -109,17 +117,39 @@ class Playlists extends Component {
 
 
 class App extends Component {
+  constructor(){
+    super();
+    this.state = {serverData: {}}
+  }
+  componentDidMount() {
+    setTimeout(() => {
+    this.setState({serverData: fakeServerData});
+    }, 500);
+  }
   render() {
   return (
     <div className="App" style={{...defaultStyle}}>
-        <h1>Title</h1>
-        <PlaylistCounter/>
-        <MinutesCounter/>
+            {this.state.serverData.user ?
+      <div> 
+        <h1>         
+            {this.state.serverData.user.name}
+          </h1>
+        
+        <PlaylistCounter playlists={this.state.serverData.user.playlists}/>
+        
+        <MinutesCounter playlists={this.state.serverData.user.playlists}/>
+
         <Filter/>
+
         <Playlists/>
+
         <Playlists/>
+
         <Playlists/>
+
         <Playlists/>
+
+      </div> : <h1>Loading</h1>}
     </div>
   );
 }
