@@ -124,9 +124,6 @@ class App extends Component {
     this.state = {serverData: {}}
   }
   componentDidMount() {
-    setTimeout(() => {
-    this.setState({serverData: fakeServerData});
-    }, 500);
   }
   render() {
   return (
@@ -148,11 +145,13 @@ class App extends Component {
             <Playlist playlist= {playlist}/>
           
             )}
-
-        
-
-      </div> : <h1>Loading</h1>}
-    </div>
+        </div> : 
+        <button 
+          onClick={() => {window.location.href="http://localhost:8888/login"}}
+          style={{padding: "20px", "font-size": "50px", "margin-top": "20px"}}>Loading...</button>
+  }
+  </div>
+    
   );
 }
 }
