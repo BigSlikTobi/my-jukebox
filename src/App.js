@@ -130,6 +130,8 @@ class App extends Component {
     console.log(token);
     let accessToken = token.access_token;
     console.log(accessToken);
+    let accessToken2 = token.code;
+    console.log(accessToken2)
 
     if (!accessToken)
       return;
@@ -193,7 +195,7 @@ class App extends Component {
           onClick={() => {
             window.location.href=window.location.href.includes("localhost")
             ? "http://localhost:8888/login" 
-            : "https://oauthbackend.herokuapp.com/login"
+            : "https://oauthbackend.herokuapp.com/"
           }}
           style={{padding: "20px", "font-size": "50px", "margin-top": "20px"}}>Loading...</button>
   }
