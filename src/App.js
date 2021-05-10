@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import queryString from 'query-string';
 import './App.css';
 
 //added blue as default text color
@@ -104,7 +105,7 @@ class Playlist extends Component {
     let playlist = this.props.playlist
   return(
     <div style={{...defaultStyle, width: "20%", display: "inline-block"}}>
-      <img/>
+      <img src={playlist.imageUrl} style={{width: "160px"}}/>
       <h3>{playlist.name}</h3>
       <ul>
         {playlist.songs.map(song =>
@@ -124,7 +125,44 @@ class App extends Component {
     this.state = {serverData: {}}
   }
   componentDidMount() {
-  }
+    //get access token from query string after connecting to Spotify 
+    let token = queryString.parse(window.location.search);
+    console.log(token);
+    let accessToken = token.access_token;
+    console.log(accessToken);
+
+    fetch ("https://api.spotify.com/v1/me", {
+      headers: {"Authorization": "Bearer " +accessToken}
+    }).then(response => response.json())
+    .then(data => this.setState(
+      {serverData: 
+        {user: 
+          {name: data.display_name}
+        }
+      }
+      ))
+
+
+    fetch ("https://api.spotify.com/v1/me/playlists", {
+      headers: {"Authorization": "Bearer " +accessToken}
+    }).then(response => response.json())
+    .then(data => this.setState({
+          playlists: data.items.map(item => {
+            console.log(data)
+            return{
+            name: item.name, 
+            imageUrl: item.images[0].url,
+                songs: []
+          }
+        })
+      }))
+      
+
+    //.then(data => console.log(data)
+    
+    
+    
+    }
   render() {
   return (
     <div className="App" style={{...defaultStyle}}>
@@ -133,18 +171,21 @@ class App extends Component {
         <h1>         
             {this.state.serverData.user.name}
           </h1>
+          {this.state.playlists &&
+          <div>
+        <PlaylistCounter playlists={this.state.playlists}/>
         
-        <PlaylistCounter playlists={this.state.serverData.user.playlists}/>
-        
-        <MinutesCounter playlists={this.state.serverData.user.playlists}/>
+        <MinutesCounter playlists={this.state.playlists}/>
 
         <Filter/>
 
         {
-          this.state.serverData.user.playlists.map(playlist => 
+          this.state.playlists.map(playlist => 
             <Playlist playlist= {playlist}/>
           
             )}
+        </div>
+  }
         </div> : 
         <button 
           onClick={() => {window.location.href="http://localhost:8888/login"}}
