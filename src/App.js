@@ -131,6 +131,8 @@ class App extends Component {
     let accessToken = token.access_token;
     console.log(accessToken);
 
+    if (!accessToken)
+      return;
     fetch ("https://api.spotify.com/v1/me", {
       headers: {"Authorization": "Bearer " +accessToken}
     }).then(response => response.json())
