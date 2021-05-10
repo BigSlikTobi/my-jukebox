@@ -163,7 +163,35 @@ class App extends Component {
       
 
     //.then(data => console.log(data)
-    
+  
+    if (!accessToken2)
+      return;
+    fetch ("https://api.spotify.com/v1/me", {
+      headers: {"Authorization": "Bearer " +accessToken2}
+    }).then(response => response.json())
+    .then(data => this.setState(
+      {serverData: 
+        {user: 
+          {name: data.display_name}
+        }
+      }
+      ))
+
+
+    fetch ("https://api.spotify.com/v1/me/playlists", {
+      headers: {"Authorization": "Bearer " +accessToken2}
+    }).then(response => response.json())
+    .then(data => this.setState({
+          playlists: data.items.map(item => {
+            console.log(data)
+            return{
+            name: item.name, 
+            imageUrl: item.images[0].url,
+                songs: []
+          }
+        })
+      }))
+      
     
     
     }
@@ -195,7 +223,7 @@ class App extends Component {
           onClick={() => {
             window.location.href=window.location.href.includes("localhost")
             ? "http://localhost:8888/login" 
-            : "https://oauthbackend.herokuapp.com/"
+            : "https://oauthbackend.herokuapp.com/login"
           }}
           style={{padding: "20px", "font-size": "50px", "margin-top": "20px"}}>Loading...</button>
   }
